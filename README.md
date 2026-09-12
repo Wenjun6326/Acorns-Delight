@@ -8,7 +8,9 @@
 > 因此本项目使用 **Mojang 官方名称**开发，不再使用 Yarn 映射；`build.gradle` 中也没有
 > `mappings` 依赖行，`modImplementation` / `remapJar` 已分别改为 `implementation` / `jar`。
 
-当前版本：**1.1.0** ｜ [下载最新版](../../releases/latest) ｜ 更新内容见 [CHANGELOG.md](CHANGELOG.md) ｜ 参与开发与发布流程见 [CONTRIBUTING.md](CONTRIBUTING.md)
+[![latest release](https://img.shields.io/github/v/release/Wenjun6326/Acorns-Delight?label=download&sort=semver)](https://github.com/Wenjun6326/Acorns-Delight/releases/latest)
+
+当前版本：**1.1.0** ｜ **直接下载：[acorns-delight-1.1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/latest/download/acorns-delight-1.1.0.jar)** ｜ 更新内容见 [CHANGELOG.md](CHANGELOG.md) ｜ 参与开发与发布流程见 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
@@ -94,7 +96,16 @@ JEI / REI 均为**可选**依赖：未安装时对应的入口点不会被加载
 2. 将 `acorns-delight-1.1.0.jar` 与 [Fabric API](https://modrinth.com/mod/fabric-api) 放入 `.minecraft/mods`。
 3. 可选：一起放入 Farmer's Delight Refabricated、JEI 或 REI。
 
-> 也可以直接在 [Releases](../../releases) 页面下载已编译好的 jar，无需自己构建。
+> 也可以直接在 [Releases 页面](https://github.com/Wenjun6326/Acorns-Delight/releases) 下载已编译好的 jar，无需自己构建。
+
+## 版本与下载
+
+| 版本 | 说明 | 下载 |
+| --- | --- | --- |
+| **1.1.0** | 放宽 Fabric Loader 要求至 **0.18.4+**（玩法同 1.0） | [acorns-delight-1.1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/download/1.1.0/acorns-delight-1.1.0.jar) |
+| 1.0 | 首个可玩版本（要求 Loader 0.19.5+） | [tag 1.0](https://github.com/Wenjun6326/Acorns-Delight/tree/1.0) |
+
+> **建议用 1.1.0**：1.0 只写了 `fabricloader >=0.19.5`，在更老的 Loader 上会被直接拒绝加载。
 
 ## 发布到 GitHub
 

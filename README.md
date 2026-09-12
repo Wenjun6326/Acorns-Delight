@@ -1,110 +1,142 @@
-# Acorn's Delight / 姗℃灉鐨勪箰瓒?
-浠撳簱鍦板潃锛?https://github.com/Wenjun6326/Acorns-Delight>
+# Acorn's Delight / 橡果的乐趣
 
-涓€涓潰鍚?**Minecraft 26.1锛團abric锛?* 鐨勫皬鍨嬪啘澶箰浜嬮鏍兼墿灞曟ā缁勩€?
-> 娉ㄦ剰锛?6.1 鏄?Minecraft 鍘嗗彶涓?*绗竴涓笉娣锋穯锛坲nobfuscated锛?*鐨勭増鏈€?> 鍥犳鏈」鐩娇鐢?**Mojang 瀹樻柟鍚嶇О**寮€鍙戯紝涓嶅啀浣跨敤 Yarn 鏄犲皠锛沗build.gradle` 涓篃娌℃湁
-> `mappings` 渚濊禆琛岋紝`modImplementation` / `remapJar` 宸插垎鍒敼涓?`implementation` / `jar`銆?
-褰撳墠鐗堟湰锛?*1.0** 锝?鏇存柊鍐呭瑙?[CHANGELOG.md](CHANGELOG.md) 锝?鍙備笌寮€鍙戜笌鍙戝竷娴佺▼瑙?[CONTRIBUTING.md](CONTRIBUTING.md)
+仓库地址：<https://github.com/Wenjun6326/Acorns-Delight>
+
+一个面向 **Minecraft 26.1（Fabric）** 的小型农夫乐事风格扩展模组。
+
+> 注意：26.1 是 Minecraft 历史上**第一个不混淆（unobfuscated）**的版本。
+> 因此本项目使用 **Mojang 官方名称**开发，不再使用 Yarn 映射；`build.gradle` 中也没有
+> `mappings` 依赖行，`modImplementation` / `remapJar` 已分别改为 `implementation` / `jar`。
+
+当前版本：**1.0** ｜ 更新内容见 [CHANGELOG.md](CHANGELOG.md) ｜ 参与开发与发布流程见 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
-## 鍐呭
+## 内容
 
-| 鐗╁搧 | 璇存槑 |
+| 物品 | 说明 |
 | --- | --- |
-| `acorn_delight:acorn` 姗℃灉 | 鏅€氱墿鍝侊紝涓嶅彲椋熺敤 |
-| `acorn_delight:acorn_jam` 姗℃灉閰?| 椋熺墿锛屾仮澶?**4 鐐归ケ椋熷害** 涓?**3.5 鐐归ケ鍜屽害**锛岄ギ鐢ㄨ€楁椂 1.6 绉?|
+| `acorn_delight:acorn` 橡果 | 普通物品，不可食用 |
+| `acorn_delight:acorn_jam` 橡果酱 | 食物，恢复 **4 点饱食度** 与 **3.5 点饱和度**，饮用耗时 1.6 秒 |
 
-### 鑾峰彇鏂瑰紡
+### 获取方式
 
-* **姗℃灉**锛氱牬鍧忔櫘閫氭鏍戞爲鍙讹紙`minecraft:oak_leaves`锛夋椂鏈?**13% 姒傜巼**棰濆鎺夎惤 1 涓€?  * 閫氳繃 Fabric 鐨?`LootTableEvents.MODIFY` 娉ㄥ叆涓€涓嫭绔嬫帀钀芥睜瀹炵幇锛?*涓嶈鐩?*鍘熺増鎴樺埄鍝佽〃锛?    鍥犳鍙互鍜屽叾浠栦慨鏀规鏍戞爲鍙剁殑妯＄粍 / 鏁版嵁鍖呭叡瀛樸€?  * 鎺夎惤姹犲甫 `survives_explosion` 鏉′欢锛氳鐖嗙偢鐮村潖鐨勬爲鍙朵笉浼氭帀钀芥鏋溿€?  * 鐢ㄥ壀鍒€鎴栫簿鍑嗛噰闆嗛噰闆嗘爲鍙朵笉浼氭帀钀芥鏋滐紙鍘熺増绗竴鎺夎惤姹犲懡涓悗鍗充腑姝㈠悗缁睜锛夈€?* **姗℃灉閰?*锛氬伐浣滃彴鍚堟垚 鈥斺€?4 涓鏋?+ 2 棰楀彲鍙眴銆?
+* **橡果**：破坏普通橡树树叶（`minecraft:oak_leaves`）时有 **13% 概率**额外掉落 1 个。
+  * 通过 Fabric 的 `LootTableEvents.MODIFY` 注入一个独立掉落池实现，**不覆盖**原版战利品表，
+    因此可以和其他修改橡树树叶的模组 / 数据包共存。
+  * 掉落池带 `survives_explosion` 条件：被爆炸破坏的树叶不会掉落橡果。
+  * 用剪刀或精准采集采集树叶不会掉落橡果（原版第一掉落池命中后即中止后续池）。
+* **橡果酱**：工作台合成 —— 4 个橡果 + 2 颗可可豆。
+
 ```
-A . A          A = 姗℃灉 (acorn_delight:acorn)
-A C A          C = 鍙彲璞?(minecraft:cocoa_beans)
+A . A          A = 橡果 (acorn_delight:acorn)
+A C A          C = 可可豆 (minecraft:cocoa_beans)
 A . A
 ```
 
-## 鍏煎鎬?
-| 妯＄粍 | 鐘舵€?| 璇存槑 |
+## 兼容性
+
+| 模组 | 状态 | 说明 |
 | --- | --- | --- |
-| **Farmer's Delight Refabricated** | 鉁?鍏煎 | 鏈ā缁勫彧浣跨敤鍘熺増鐗╁搧涓庢爣鍑嗘暟鎹寘鏍煎紡锛屼笖閫氳繃鎴樺埄鍝佽〃浜嬩欢娉ㄥ叆鎺夎惤锛屼笉浼氫笌鍏跺啿绐併€俙fabric.mod.json` 涓０鏄庝负 `recommends`锛堣蒋渚濊禆锛夈€?|
-| **JEI** (`jei`) | 鉁?鏀寔 | 鎻愪緵 `jei_mod_plugin` 鍏ュ彛鐐广€傛鏋滈叡鏄爣鍑嗙殑鏈夊簭鍚堟垚閰嶆柟锛孞EI 浼氳嚜鍔ㄦ敹褰曞苟鏄剧ず銆?|
-| **REI** (`roughlyenoughitems`) | 鉁?鏀寔 | 鎻愪緵 `rei_client` 鍏ュ彛鐐广€傚悓鏍风敱 REI 鑷姩鏄剧ず鍚堟垚閰嶆柟銆?|
-| 鍏朵粬鍐滃か涔愪簨闄勫睘 | 鉁?鍏煎 | 鏈崰鐢ㄤ换浣曞叕鍏?ID锛屼篃鏈敼鍐欏師鐗堟枃浠躲€?|
+| **Farmer's Delight Refabricated** | ✅ 兼容 | 本模组只使用原版物品与标准数据包格式，且通过战利品表事件注入掉落，不会与其冲突。`fabric.mod.json` 中声明为 `recommends`（软依赖）。 |
+| **JEI** (`jei`) | ✅ 支持 | 提供 `jei_mod_plugin` 入口点。橡果酱是标准的有序合成配方，JEI 会自动收录并显示。 |
+| **REI** (`roughlyenoughitems`) | ✅ 支持 | 提供 `rei_client` 入口点。同样由 REI 自动显示合成配方。 |
+| 其他农夫乐事附属 | ✅ 兼容 | 未占用任何公共 ID，也未改写原版文件。 |
 
-JEI / REI 鍧囦负**鍙€?*渚濊禆锛氭湭瀹夎鏃跺搴旂殑鍏ュ彛鐐逛笉浼氳鍔犺浇锛屾父鎴忎笉浼氭姤閿欍€?
-## 鏋勫缓
+JEI / REI 均为**可选**依赖：未安装时对应的入口点不会被加载，游戏不会报错。
 
-闇€瑕?**JDK 25**锛圙radle 浼氫娇鐢?toolchain 25锛夈€?
+## 构建
+
+需要 **JDK 25**（Gradle 会使用 toolchain 25）。
+
 ```bash
 ./gradlew build
 ```
 
-浜х墿锛歚build/libs/acorns-delight-1.0.jar`
+产物：`build/libs/acorns-delight-1.0.jar`
 
-### 鑷姩鍖栭獙璇?
-妯＄粍鑷甫 6 涓?**娓告垙鍐呮祴璇曪紙GameTest锛?*锛屼細鍦ㄧ湡瀹炵殑 Minecraft 鏈嶅姟绔噷楠岃瘉鎺夎惤鐜囥€侀厤鏂逛笌椋熺墿鏁板€硷細
+### 自动化验证
+
+模组自带 6 个 **游戏内测试（GameTest）**，会在真实的 Minecraft 服务端里验证掉落率、配方与食物数值：
 
 ```bash
 ./gradlew runGameTest
 ```
 
-閫氳繃鏃惰緭鍑?`All 6 required tests passed :)`銆傝鐩栧唴瀹癸細
+通过时输出 `All 6 required tests passed :)`。覆盖内容：
 
-1. `acorn_delight:acorn_jam` 閰嶆柟琚纭姞杞斤紱
-2. 3脳3 宸ヤ綔鍙颁腑銆? 姗℃灉 + 2 鍙彲璞嗐€嶈兘鍖归厤鍒拌閰嶆柟锛?3. 姗℃灉閰遍ケ椋熷害涓?4銆侀ケ鍜屽害涓?3.5锛堢簿纭牎楠岋級锛?4. 姗℃灉鏈韩涓嶅彲椋熺敤锛?5. 姗℃爲鏍戝彾鐨勬帀钀借〃涓‘瀹炲寘鍚鏋滄潯鐩紱
-6. 椹卞姩鎺夎惤琛?500 娆″苟鏂█瑙傛祴鎺夎惤鐜囨帴杩?13%锛屽悓鏃剁敤 `Block.getDrops` 璧颁竴閬嶆父鎴忕湡瀹炵殑鐮村潖鏂瑰潡璺緞銆?
-> 杩欏娴嬭瘯鍦ㄥ紑鍙戜腑纭疄鎶撳埌浜嗕竴涓?bug锛氭渶鍒濇垬鍒╁搧姹犻噷鍙斁浜嗕竴涓潯鐩紝鑰?*鍗曟潯鐩睜蹇呭畾鎺夎惤**锛?> 瀵艰嚧瀹為檯姒傜巼鏄?100% 鑰岄潪 13%銆備慨姝ｆ柟寮忔槸琛ヤ笂涓€涓潈閲嶄簰琛ョ殑绌烘潯鐩紙13 : 87锛夈€?
-### 宸ュ叿閾剧増鏈?
-| 缁勪欢 | 鐗堟湰 |
+1. `acorn_delight:acorn_jam` 配方被正确加载；
+2. 3×3 工作台中「4 橡果 + 2 可可豆」能匹配到该配方；
+3. 橡果酱饱食度为 4、饱和度为 3.5（精确校验）；
+4. 橡果本身不可食用；
+5. 橡树树叶的掉落表中确实包含橡果条目；
+6. 驱动掉落表 500 次并断言观测掉落率接近 13%，同时用 `Block.getDrops` 走一遍游戏真实的破坏方块路径。
+
+> 这套测试在开发中确实抓到了一个 bug：最初战利品池里只放了一个条目，而**单条目池必定掉落**，
+> 导致实际概率是 100% 而非 13%。修正方式是补上一个权重互补的空条目（13 : 87）。
+
+### 工具链版本
+
+| 组件 | 版本 |
 | --- | --- |
-| Minecraft | 26.1锛坄fabric.mod.json` 澹版槑 `~26.1`锛屽洜姝?26.1 / 26.1.1 / 26.1.2 閮藉彲杩愯锛?|
+| Minecraft | 26.1（`fabric.mod.json` 声明 `~26.1`，因此 26.1 / 26.1.1 / 26.1.2 都可运行） |
 | Fabric Loader | 0.19.5 |
 | Fabric API | 0.145.1+26.1 |
-| Fabric Loom | 1.17.20锛坄net.fabricmc.fabric-loom`锛?|
+| Fabric Loom | 1.17.20（`net.fabricmc.fabric-loom`） |
 | Gradle | 9.5.1 |
 | Java | 25 |
 
-## 瀹夎
+## 安装
 
-1. 瀹夎 Fabric Loader 0.19.5 鍙婁互涓娿€?2. 灏?`acorns-delight-1.0.jar` 涓?[Fabric API](https://modrinth.com/mod/fabric-api) 鏀惧叆 `.minecraft/mods`銆?3. 鍙€夛細涓€璧锋斁鍏?Farmer's Delight Refabricated銆丣EI 鎴?REI銆?
-## 鍙戝竷鍒?GitHub
+1. 安装 Fabric Loader 0.19.5 及以上。
+2. 将 `acorns-delight-1.0.jar` 与 [Fabric API](https://modrinth.com/mod/fabric-api) 放入 `.minecraft/mods`。
+3. 可选：一起放入 Farmer's Delight Refabricated、JEI 或 REI。
 
-浠撳簱缁存姢鑰呴娆″彂甯冩椂杩愯锛堝彧闇€涓€娆★紝涔嬪悗鐢ㄦ櫘閫氱殑 `git push` 鍗冲彲锛夛細
+## 发布到 GitHub
+
+仓库维护者首次发布时运行（只需一次，之后用普通的 `git push` 即可）：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\init-github.ps1
 ```
 
-鑴氭湰浼氬垱寤?GitHub 浠撳簱銆佹帹閫?`main` 涓庡叏閮ㄦ爣绛撅紝骞舵妸鐪熷疄浠撳簱鍦板潃鍥炲～鍒版湰鏂囦欢涓?`CHANGELOG.md`銆?瀹?*鍙渶瑕?git 鍜屼竴涓?GitHub Token**锛屼笉闇€瑕佸畨瑁?GitHub CLI锛堥儴鍒嗙綉缁滀細灞忚斀 GitHub 鐨勭綉椤?涓嬭浇鍩熷悕锛?浣?git 涓?api.github.com 閫氬父鍙敤锛夈€俆oken 浠呯敤浜庢湰娆℃帹閫侊紝涓嶄細鍐欏叆纾佺洏銆?
-鍚庣画鐗堟湰鍙戝竷娴佺▼瑙?[CONTRIBUTING.md](CONTRIBUTING.md)銆?
-## 椤圭洰缁撴瀯
+脚本会创建 GitHub 仓库、推送 `main` 与全部标签，并把真实仓库地址回填到本文件与 `CHANGELOG.md`。
+它**只需要 git 和一个 GitHub Token**，不需要安装 GitHub CLI（部分网络会屏蔽 GitHub 的网页/下载域名，
+但 git 与 api.github.com 通常可用）。Token 仅用于本次推送，不会写入磁盘。
+
+后续版本发布流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+## 项目结构
 
 ```
 src/main/java/com/acorndelight/
-鈹溾攢鈹€ AcornsDelight.java              妯＄粍鍏ュ彛
-鈹溾攢鈹€ ModItems.java                   鐗╁搧娉ㄥ唽锛堝惈姗℃灉閰辩殑椋熺墿灞炴€э級
-鈹溾攢鈹€ ModCreativeTabs.java            鍒涢€犳ā寮忕墿鍝佹爮
-鈹溾攢鈹€ ModLootTables.java              姗℃爲鏍戝彾 13% 鎺夎惤姗℃灉
-鈹斺攢鈹€ compat/
-    鈹溾攢鈹€ jei/AcornsDelightJeiPlugin.java
-    鈹斺攢鈹€ rei/AcornsDelightReiPlugin.java
+├── AcornsDelight.java              模组入口
+├── ModItems.java                   物品注册（含橡果酱的食物属性）
+├── ModCreativeTabs.java            创造模式物品栏
+├── ModLootTables.java              橡树树叶 13% 掉落橡果
+└── compat/
+    ├── jei/AcornsDelightJeiPlugin.java
+    └── rei/AcornsDelightReiPlugin.java
 
 src/main/resources/
-鈹溾攢鈹€ fabric.mod.json
-鈹溾攢鈹€ assets/acorn_delight/{items,models/item,textures/item,lang}/
-鈹斺攢鈹€ data/acorn_delight/recipe/acorn_jam.json
+├── fabric.mod.json
+├── assets/acorn_delight/{items,models/item,textures/item,lang}/
+└── data/acorn_delight/recipe/acorn_jam.json
 ```
 
-### 鍏充簬 `items/*.json` 涓?`models/item/*.json`
+### 关于 `items/*.json` 与 `models/item/*.json`
 
-鑷?1.21.4 璧凤紝涓€涓墿鍝侀渶瑕?*涓や釜** JSON 鏂囦欢锛?
-* `assets/<ns>/items/<name>.json` 鈥斺€?"client item" / 鐗╁搧妯″瀷瀹氫箟锛堝繀闇€锛岀己澶卞垯鐗╁搧鏄剧ず涓虹传榛戞柟鍧楋級
-* `assets/<ns>/models/item/<name>.json` 鈥斺€?浼犵粺鐗╁搧妯″瀷锛岀埗绾?`minecraft:item/generated`
+自 1.21.4 起，一个物品需要**两个** JSON 文件：
 
-## 璐村浘
+* `assets/<ns>/items/<name>.json` —— "client item" / 物品模型定义（必需，缺失则物品显示为紫黑方块）
+* `assets/<ns>/models/item/<name>.json` —— 传统物品模型，父级 `minecraft:item/generated`
 
-`textures/item/acorn.png` 涓?`acorn_jam.png` 鐢辩敤鎴锋彁渚涚殑楂樺垎杈ㄧ巼鍘熷浘闄嶉噰鏍蜂负 **16脳16** 鍒舵垚銆?`icon.png` 鐢辨鏋滆创鍥句互鏈€杩戦偦鏀惧ぇ鐢熸垚銆?
-## 璁稿彲
+## 贴图
 
-MIT锛岃瑙?`LICENSE`銆?`libs/` 鐩綍涓嬩粎鐢ㄤ簬缂栬瘧鐨?REI jar 鐗堟潈褰掑師浣滆€呮墍鏈夛紝璇﹁ `libs/README.md`銆?
+`textures/item/acorn.png` 与 `acorn_jam.png` 由用户提供的高分辨率原图降采样为 **16×16** 制成。
+`icon.png` 由橡果贴图以最近邻放大生成。
+
+## 许可
+
+MIT，详见 `LICENSE`。
+`libs/` 目录下仅用于编译的 REI jar 版权归原作者所有，详见 `libs/README.md`。

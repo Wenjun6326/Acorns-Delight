@@ -10,7 +10,7 @@
 
 [![latest release](https://img.shields.io/github/v/release/Wenjun6326/Acorns-Delight?label=download&sort=semver)](https://github.com/Wenjun6326/Acorns-Delight/releases/latest)
 
-当前版本：**1.1.0** ｜ **直接下载：[acorns-delight-1.1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/latest/download/acorns-delight-1.1.0.jar)** ｜ 更新内容见 [CHANGELOG.md](CHANGELOG.md) ｜ 参与开发与发布流程见 [CONTRIBUTING.md](CONTRIBUTING.md)
+当前版本：**1.1.1** ｜ **直接下载：[acorns-delight-1.1.1.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/latest/download/acorns-delight-1.1.1.jar)** ｜ 更新内容见 [CHANGELOG.md](CHANGELOG.md) ｜ 参与开发与发布流程见 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
@@ -102,12 +102,21 @@ JEI / REI 均为**可选**依赖：未安装时对应的入口点不会被加载
 
 | 版本 | 说明 | 下载 |
 | --- | --- | --- |
-| **1.1.0** ⭐ | 放宽 Fabric Loader 要求至 **0.18.4+**（玩法同 1.0） | [acorns-delight-1.1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/download/1.1.0/acorns-delight-1.1.0.jar) |
+| **1.1.1** ⭐ | 贴图缩小一个像素（玩法同 1.1.0） | [acorns-delight-1.1.1.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/download/1.1.1/acorns-delight-1.1.1.jar) |
+| 1.1.0 | 放宽 Fabric Loader 要求至 **0.18.4+** | [acorns-delight-1.1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/download/1.1.0/acorns-delight-1.1.0.jar) |
 | 1.0 | 首个可玩版本，**仅支持 Loader 0.19.5+** | [acorns-delight-1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/download/1.0/acorns-delight-1.0.jar) |
 
-> ⚠️ **请用 1.1.0。** 1.0 的 `fabric.mod.json` 声明 `fabricloader >=0.19.5`，比实际需要严格得多，
-> 在 0.18.x 或 0.19.0–0.19.4 上会被**直接拒绝加载**。1.1.0 已修正为 `>=0.18.4`，玩法完全相同。
-> 1.0 在 GitHub 上已标记为 **Pre-release**，只是为存档保留，不推荐使用。
+> ⚠️ **请用 1.1.1（或至少 1.1.0）。** 1.0 的 `fabric.mod.json` 声明 `fabricloader >=0.19.5`，
+> 比实际需要严格得多，在 0.18.x 或 0.19.0–0.19.4 上会被**直接拒绝加载**。
+> 1.1.0 已修正为 `>=0.18.4`，玩法完全相同。1.0 在 GitHub 上已标记为 **Pre-release**，
+> 只是为存档保留，不推荐使用。
+
+### 贴图尺寸
+
+| 版本 | 橡果 | 橡果酱 |
+| --- | --- | --- |
+| 1.1.1 | 11×15（画布 16×16） | 13×15（画布 16×16） |
+| 1.0 / 1.1.0 | 12×16 | 14×16 |
 
 ## 发布到 GitHub
 

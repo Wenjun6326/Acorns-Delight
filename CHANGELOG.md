@@ -2,12 +2,39 @@
 
 仓库：<https://github.com/Wenjun6326/Acorns-Delight>
 
-本文件记录每个**可玩版本**。版本号规则见 [README.md](README.md)：
+本文件记录每个**可玩版本**。版本号规则见 [CONTRIBUTING.md](CONTRIBUTING.md)：
 
-* **X.0** —— 大改动（全新机制或新玩法）
-* **X.Y** —— 小改动（仅修复兼容性或优化）
+* **X.Y.0** —— 大改动（全新机制或新玩法）
+* **X.Y.Z** —— 小改动（仅修复兼容性或优化）
 
-每个版本号都对应一个同名的 Git Tag。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+每个版本号都对应一个同名的 Git Tag。
+
+---
+
+## [1.1.0] — 2026-09-12
+
+**小改动：放宽 Fabric Loader 版本要求。** 玩法与 1.0 完全一致，只是能在更多环境下启动。
+
+### 修复
+
+* **无法在 Fabric Loader 0.19.5 以下的版本启动。**
+  `fabric.mod.json` 里把 `fabricloader` 要求写成了 `>=0.19.5`，远高于实际需要，
+  导致使用 0.18.x / 0.19.0–0.19.4 的整合包与玩家被直接拒绝加载。
+
+### 变更
+
+* `depends.fabricloader` 由 `>=0.19.5` 放宽到 **`>=0.18.4`**。
+  这是 26.1 可用的最老 Loader，也正是 Fabric API `0.145.1+26.1` 自声明的下限
+  （`fabricloader >=0.18.4`），因此无法再往下降。
+* 开发环境（`gradle.properties` 的 `loader_version`）同步改为 **0.18.4**，
+  即**刻意用最低支持的 Loader 开发和跑测试**——这样一旦代码误用了新版 Loader 才有的行为，
+  会在本地 GameTest 直接失败，而不是等玩家崩溃。
+* 新增 `min_loader_version` 字段，供 `fabric.mod.json` 模板引用，避免两处版本号不同步。
+
+### 验证
+
+* `Loading Minecraft 26.1 with Fabric Loader 0.18.4` → **6 个 GameTest 全部通过**。
+* 构建产物 `acorns-delight-1.1.0.jar` 内 `fabric.mod.json` 已确认为 `fabricloader >=0.18.4`。
 
 ---
 

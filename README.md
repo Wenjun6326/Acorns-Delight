@@ -8,7 +8,7 @@
 > 因此本项目使用 **Mojang 官方名称**开发，不再使用 Yarn 映射；`build.gradle` 中也没有
 > `mappings` 依赖行，`modImplementation` / `remapJar` 已分别改为 `implementation` / `jar`。
 
-当前版本：**1.0** ｜ 更新内容见 [CHANGELOG.md](CHANGELOG.md) ｜ 参与开发与发布流程见 [CONTRIBUTING.md](CONTRIBUTING.md)
+当前版本：**1.1.0** ｜ [下载最新版](../../releases/latest) ｜ 更新内容见 [CHANGELOG.md](CHANGELOG.md) ｜ 参与开发与发布流程见 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
@@ -80,7 +80,8 @@ JEI / REI 均为**可选**依赖：未安装时对应的入口点不会被加载
 | 组件 | 版本 |
 | --- | --- |
 | Minecraft | 26.1（`fabric.mod.json` 声明 `~26.1`，因此 26.1 / 26.1.1 / 26.1.2 都可运行） |
-| Fabric Loader | 0.19.5 |
+| Fabric Loader（最低要求） | **0.18.4**（26.1 可用的最老 Loader，也正是 Fabric API 的下限） |
+| Fabric Loader（开发环境） | 0.18.4（刻意用最低版本，见 [CONTRIBUTING.md](CONTRIBUTING.md)） |
 | Fabric API | 0.145.1+26.1 |
 | Fabric Loom | 1.17.20（`net.fabricmc.fabric-loom`） |
 | Gradle | 9.5.1 |
@@ -88,9 +89,12 @@ JEI / REI 均为**可选**依赖：未安装时对应的入口点不会被加载
 
 ## 安装
 
-1. 安装 Fabric Loader 0.19.5 及以上。
-2. 将 `acorns-delight-1.0.jar` 与 [Fabric API](https://modrinth.com/mod/fabric-api) 放入 `.minecraft/mods`。
+1. 安装 **Fabric Loader 0.18.4 或更高**（0.19.x、0.20.x 等新版同样可用）。
+   推荐直接用最新的 [Fabric 安装器](https://fabricmc.net/use/installer/)。
+2. 将 `acorns-delight-1.1.0.jar` 与 [Fabric API](https://modrinth.com/mod/fabric-api) 放入 `.minecraft/mods`。
 3. 可选：一起放入 Farmer's Delight Refabricated、JEI 或 REI。
+
+> 也可以直接在 [Releases](../../releases) 页面下载已编译好的 jar，无需自己构建。
 
 ## 发布到 GitHub
 

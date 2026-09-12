@@ -63,6 +63,7 @@ processResources {
 	def props = [
 		version              : project.version,
 		loader_version       : project.loader_version,
+		min_loader_version   : project.min_loader_version,
 		minecraft_version    : project.minecraft_version,
 		fabric_api_version   : project.fabric_api_version,
 		jei_version          : project.jei_version,

@@ -52,7 +52,9 @@ param(
     [switch]$Prerelease,
     # Build and upload the jar from this directory instead of the current one. Useful for
     # publishing an older tag without disturbing the working tree.
-    [string]$ProjectDir
+    [string]$ProjectDir,
+    # Repository name, only needed when -ProjectDir is used outside a git working tree.
+    [string]$RepoName
 )
 
 $ErrorActionPreference = "Stop"
@@ -109,28 +111,15 @@ Build it first (this also runs the in-game tests):
 $jarInfo = Get-Item $jarPath
 Write-Ok ("Jar size: {0:N0} bytes" -f $jarInfo.Length)
 
-# --------------------------------------------------------- 1. Tag must exist
+# ------------------------------------------- 1. Token and repository identity
+#
+# Done before the tag check so that the tag can be verified through the API, which works
+# whether or not we are inside a git working tree (a `git archive` export is not).
 
-Write-Step "Checking that tag $Version exists and is pushed"
+Write-Step "Reading your GitHub token"
 
-$localTag = git tag -l "$Version"
-if (-not $localTag) {
-    throw "Local tag '$Version' does not exist. Create and push it first: git tag $Version ; git push origin $Version"
-}
-$remoteTag = (git ls-remote --tags origin "refs/tags/$Version" 2>$null)
-if (-not $remoteTag) {
-    Write-Note "Tag $Version is not on the remote yet; pushing it."
-    git push origin "$Version"
-    if ($LASTEXITCODE -ne 0) { throw "Failed to push tag $Version." }
-}
-Write-Ok "Tag $Version is present locally and on origin"
-
-# ---------------------------------------------------------------- 2. Token
-
-$headers = $null
 if (-not $Token) { $Token = $env:GITHUB_TOKEN }
 if (-not $Token) {
-    Write-Step "Reading your GitHub token"
     Write-Host "    Create one at https://github.com/settings/tokens (classic, 'repo' scope)" -ForegroundColor Yellow
     $secure = Read-Host "    Paste your GitHub token (input hidden)" -AsSecureString
     $Token = [Runtime.InteropServices.Marshal]::PtrToStringAuto(
@@ -156,16 +145,52 @@ catch {
 $ghUser = $me.login
 Write-Ok "Authenticated as: $ghUser"
 
-# Determine the repository from the git remote (owner/repo)
-$remoteUrl = (git remote get-url origin)
-if ($remoteUrl -match 'github\.com[:/]+([^/]+)/([^/]+?)(\.git)?$') {
-    $owner = $Matches[1]
-    $repo = $Matches[2]
+# Resolve owner/repo. Inside a git tree, prefer the origin remote; otherwise fall back
+# to the authenticated user, which is correct for a -ProjectDir export.
+$owner = $ghUser
+$repo = $null
+$inGitRepo = $false
+try {
+    $null = git rev-parse --git-dir 2>$null
+    if ($LASTEXITCODE -eq 0) { $inGitRepo = $true }
 }
-else {
-    throw "Could not parse the GitHub owner/repo from the origin remote: $remoteUrl"
+catch { }
+if ($inGitRepo) {
+    $remoteUrl = (git remote get-url origin 2>$null)
+    if ($remoteUrl -match 'github\.com[:/]+([^/]+)/([^/]+?)(\.git)?$') {
+        $owner = $Matches[1]
+        $repo = $Matches[2]
+    }
+}
+if (-not $repo) {
+    if ($RepoName) { $repo = $RepoName }
+    else { throw "Could not determine the repository name. Pass -RepoName, or run inside the git working tree." }
 }
 Write-Ok "Repository: $owner/$repo"
+
+# --------------------------------------------------------- 2. Tag must exist
+
+Write-Step "Checking that tag $Version exists on origin"
+
+$remoteTag = $null
+try {
+    $remoteTag = Invoke-RestMethod -Uri "https://api.github.com/repos/$owner/$repo/git/ref/tags/$Version" `
+        -Headers $headers -TimeoutSec 30
+}
+catch { }
+
+if (-not $remoteTag) {
+    # Inside a git tree we can push a missing tag ourselves; outside one we cannot.
+    if ($inGitRepo -and (git tag -l "$Version")) {
+        Write-Note "Tag $Version exists locally but not on origin; pushing it."
+        git push origin "$Version"
+        if ($LASTEXITCODE -ne 0) { throw "Failed to push tag $Version." }
+    }
+    else {
+        throw "Tag '$Version' was not found on $owner/$repo. Create and push it first: git tag $Version ; git push origin $Version"
+    }
+}
+Write-Ok "Tag $Version is present on origin"
 
 # ------------------------------------------------- 3. Build the release body
 

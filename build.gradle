@@ -1,0 +1,121 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+version = project.version
+group = project.group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	// Just Enough Items
+	maven {
+		name = 'BlameJared'
+		url = 'https://maven.blamejared.com'
+	}
+	// Roughly Enough Items
+	maven {
+		name = 'Shedaniel'
+		url = 'https://maven.shedaniel.me'
+	}
+	// Farmer's Delight (and most of its add-ons) are published on Modrinth
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = 'Modrinth'
+				url = 'https://api.modrinth.com/maven'
+			}
+		}
+		filter {
+			includeGroup 'maven.modrinth'
+		}
+	}
+}
+
+dependencies {
+	// Minecraft 26.1 is unobfuscated, so there is no `mappings` dependency anymore.
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// ---- Optional compatibility targets (compile only, never bundled) ----
+
+	// JEI. Note: the `-fabric-api` artifact published on BlameJared is only a hollow stub, so the
+	// full mod jar is what actually provides the `mezz.jei.api` classes.
+	compileOnly("mezz.jei:jei-${project.minecraft_version}-fabric:${project.jei_version}") {
+		transitive = false
+	}
+
+	// REI. For 26.1 REI is not published to any Maven repository, so the compile-only jar is
+	// vendored under libs/. See libs/README.md.
+	compileOnly files("libs/${project.rei_jar}")
+
+	// Farmer's Delight (Refabricated)
+	compileOnly("maven.modrinth:farmers-delight-refabricated:${project.farmersdelight_version}") {
+		transitive = false
+	}
+}
+
+processResources {
+	def props = [
+		version              : project.version,
+		loader_version       : project.loader_version,
+		minecraft_version    : project.minecraft_version,
+		fabric_api_version   : project.fabric_api_version,
+		jei_version          : project.jei_version,
+		rei_version          : project.rei_version,
+		farmersdelight_version: project.farmersdelight_version
+	]
+	inputs.properties props
+
+	filesMatching("fabric.mod.json") {
+		expand props
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+	it.options.encoding = 'UTF-8'
+}
+
+java {
+	withSourcesJar()
+
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+
+// Provides Loom's built-in `runGametest` task, which boots a headless GameTest server and runs
+// every method annotated with @GameTest that is registered under the `fabric-gametest` entrypoint.
+// It verifies the acorn drop rate, the recipe and the food values for real, in game.
+fabricApi {
+	configureTests {
+		modId = 'acorn_delight'
+		eula = true
+		clearRunDirectory = true
+	}
+}
+
+jar {
+	def projectName = project.name
+	inputs.property "projectName", projectName
+
+	from("LICENSE") {
+		rename { "${it}_$projectName" }
+	}
+}
+
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			from components.java
+		}
+	}
+
+	repositories {
+	}
+}

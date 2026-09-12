@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "acorn_delight",
+	"version": "${version}",
+	"name": "Acorn's Delight",
+	"description": "橡果的乐趣 — adds acorns that drop from oak leaves and a jar of Acorn Jam to eat. Made to play nicely with Farmer's Delight and its add-ons.\n\nBreaking plain oak leaves has a 13% chance to drop an Acorn. Four Acorns and two Cocoa Beans craft a bottle of Acorn Jam, which restores 4 hunger and 3.5 saturation.",
+	"authors": [
+		"Acorn's Delight"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/acorn_delight/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.acorndelight.AcornsDelight"
+		],
+		"jei_mod_plugin": [
+			"com.acorndelight.compat.jei.AcornsDelightJeiPlugin"
+		],
+		"rei_client": [
+			"com.acorndelight.compat.rei.AcornsDelightReiPlugin"
+		],
+		"fabric-gametest": [
+			"com.acorndelight.AcornsDelightGameTest"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	},
+	"recommends": {
+		"farmersdelight": "*"
+	},
+	"suggests": {
+		"jei": "*",
+		"roughlyenoughitems": "*"
+	}
+}

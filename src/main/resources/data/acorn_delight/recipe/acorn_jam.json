@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "food",
+	"group": "acorn_jam",
+	"key": {
+		"A": "acorn_delight:acorn",
+		"C": "minecraft:cocoa_beans"
+	},
+	"pattern": [
+		"A A",
+		"ACA",
+		"A A"
+	],
+	"result": {
+		"count": 1,
+		"id": "acorn_delight:acorn_jam"
+	}
+}

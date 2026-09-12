@@ -1,45 +1,25 @@
-# 更新日志 / Changelog
+# 鏇存柊鏃ュ織 / Changelog
 
-仓库：<https://github.com/OWNER/REPO>
+浠撳簱锛?https://github.com/Wenjun6326/Acorns-Delight>
 
-本文件记录每个**可玩版本**。版本号规则见 [README.md](README.md)：
-
-* **X.0** —— 大改动（全新机制或新玩法）
-* **X.Y** —— 小改动（仅修复兼容性或优化）
-
-每个版本号都对应一个同名的 Git Tag。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
-
+鏈枃浠惰褰曟瘡涓?*鍙帺鐗堟湰**銆傜増鏈彿瑙勫垯瑙?[README.md](README.md)锛?
+* **X.0** 鈥斺€?澶ф敼鍔紙鍏ㄦ柊鏈哄埗鎴栨柊鐜╂硶锛?* **X.Y** 鈥斺€?灏忔敼鍔紙浠呬慨澶嶅吋瀹规€ф垨浼樺寲锛?
+姣忎釜鐗堟湰鍙烽兘瀵瑰簲涓€涓悓鍚嶇殑 Git Tag銆傝瑙?[CONTRIBUTING.md](CONTRIBUTING.md)銆?
 ---
 
-## [1.0] — 2026-09-12
+## [1.0] 鈥?2026-09-12
 
-首个可玩版本。面向 **Minecraft 26.1（Fabric）**。
+棣栦釜鍙帺鐗堟湰銆傞潰鍚?**Minecraft 26.1锛團abric锛?*銆?
+### 鏂板
 
-### 新增
+* **姗℃灉 `acorn_delight:acorn`**
+  * 鐮村潖鏅€氭鏍戞爲鍙讹紙`minecraft:oak_leaves`锛夋椂鏈?**13%** 姒傜巼棰濆鎺夎惤 1 涓€?  * 閫氳繃 Fabric `LootTableEvents.MODIFY` 娉ㄥ叆鐙珛鎺夎惤姹狅紝**涓嶈鐩?*鍘熺増鎴樺埄鍝佽〃锛屽彲涓庡叾浠栦慨鏀规鏍戞爲鍙剁殑妯＄粍鎴栨暟鎹寘鍏卞瓨锛?3 : 87 鏉冮噸锛岀┖鏉＄洰琛ヨ冻浣欓噺锛夈€?  * 鎺夎惤姹犲甫 `survives_explosion` 鏉′欢锛涚敤鍓垁鎴栫簿鍑嗛噰闆嗛噰闆嗘爲鍙朵笉浼氭帀钀芥鏋溿€?* **姗℃灉閰?`acorn_delight:acorn_jam`**
+  * 宸ヤ綔鍙板悎鎴愶細4 涓鏋?+ 2 棰楀彲鍙眴锛堟鏋滃湪鍥涜锛屽彲鍙眴鍦ㄥ墿浣欎袱鏍硷級銆?  * 椋熺敤鎭㈠ **4 鐐归ケ椋熷害** 涓?**3.5 鐐归ケ鍜屽害**锛屾寜楗枡鏂瑰紡楗敤锛?.6 绉掞級銆?* 涓撳睘鍒涢€犳ā寮忕墿鍝佹爮銆屾鏋滅殑涔愯叮銆嶃€?* 涓嫳鏂囨湰鍦板寲锛坄zh_cn` / `en_us`锛夈€?
+### 鍏煎
 
-* **橡果 `acorn_delight:acorn`**
-  * 破坏普通橡树树叶（`minecraft:oak_leaves`）时有 **13%** 概率额外掉落 1 个。
-  * 通过 Fabric `LootTableEvents.MODIFY` 注入独立掉落池，**不覆盖**原版战利品表，可与其他修改橡树树叶的模组或数据包共存（13 : 87 权重，空条目补足余量）。
-  * 掉落池带 `survives_explosion` 条件；用剪刀或精准采集采集树叶不会掉落橡果。
-* **橡果酱 `acorn_delight:acorn_jam`**
-  * 工作台合成：4 个橡果 + 2 颗可可豆（橡果在四角，可可豆在剩余两格）。
-  * 食用恢复 **4 点饱食度** 与 **3.5 点饱和度**，按饮料方式饮用（1.6 秒）。
-* 专属创造模式物品栏「橡果的乐趣」。
-* 中英文本地化（`zh_cn` / `en_us`）。
+* **JEI**锛歚jei_mod_plugin` 鍏ュ彛鐐癸紝姗℃灉閰遍厤鏂硅嚜鍔ㄦ敹褰曘€?* **REI**锛歚rei_client` 鍏ュ彛鐐癸紝閰嶆柟鑷姩鏀跺綍銆?* **Farmer's Delight Refabricated**锛歚recommends` 杞緷璧栵紝涓嶅啿绐併€?* JEI / REI 鍧囦负鍙€変緷璧栵紝鏈畨瑁呮椂涓嶄細鍔犺浇瀵瑰簲鍏ュ彛鐐广€?
+### 鎶€鏈鏄?
+* 26.1 鏄?Minecraft 棣栦釜**涓嶆贩娣?*鐗堟湰锛氫娇鐢?Mojang 瀹樻柟鍚嶇О寮€鍙戯紝`build.gradle` 涓棤 `mappings` 渚濊禆琛岋紝`modImplementation` / `remapJar` 鏀逛负 `implementation` / `jar`銆?* 宸ュ叿閾撅細JDK 25銆丟radle 9.5.1銆丗abric Loom 1.17.20銆丗abric Loader 0.19.5銆丗abric API 0.145.1+26.1銆?* 鑷甫 6 涓父鎴忓唴娴嬭瘯锛圙ameTest锛夛紝`./gradlew runGameTest` 鍏ㄧ豢銆?
+### 淇
 
-### 兼容
-
-* **JEI**：`jei_mod_plugin` 入口点，橡果酱配方自动收录。
-* **REI**：`rei_client` 入口点，配方自动收录。
-* **Farmer's Delight Refabricated**：`recommends` 软依赖，不冲突。
-* JEI / REI 均为可选依赖，未安装时不会加载对应入口点。
-
-### 技术说明
-
-* 26.1 是 Minecraft 首个**不混淆**版本：使用 Mojang 官方名称开发，`build.gradle` 中无 `mappings` 依赖行，`modImplementation` / `remapJar` 改为 `implementation` / `jar`。
-* 工具链：JDK 25、Gradle 9.5.1、Fabric Loom 1.17.20、Fabric Loader 0.19.5、Fabric API 0.145.1+26.1。
-* 自带 6 个游戏内测试（GameTest），`./gradlew runGameTest` 全绿。
-
-### 修复
-
-* 修复掉落率错误：最初战利品池只放了单个条目，而**单条目池必定掉落**，实际概率为 100% 而非 13%。由 GameTest 发现，改为加入权重互补的空条目（13 : 87）后修正。
+* 淇鎺夎惤鐜囬敊璇細鏈€鍒濇垬鍒╁搧姹犲彧鏀句簡鍗曚釜鏉＄洰锛岃€?*鍗曟潯鐩睜蹇呭畾鎺夎惤**锛屽疄闄呮鐜囦负 100% 鑰岄潪 13%銆傜敱 GameTest 鍙戠幇锛屾敼涓哄姞鍏ユ潈閲嶄簰琛ョ殑绌烘潯鐩紙13 : 87锛夊悗淇銆?

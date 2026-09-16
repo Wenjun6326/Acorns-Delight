@@ -231,11 +231,18 @@ Write-Step "Writing the repository URL into README.md and CHANGELOG.md"
 $patched = $false
 foreach ($file in @("README.md", "CHANGELOG.md")) {
     if (-not (Test-Path $file)) { continue }
-    $text = Get-Content $file -Raw
+
+    # IMPORTANT: read and write UTF-8 explicitly.
+    # Windows PowerShell 5.1's Get-Content defaults to the system ANSI code page
+    # (GBK/936 on Chinese Windows), so reading a UTF-8 file without -Encoding
+    # silently yields mojibake, and writing that back corrupts the file for good.
+    $path = (Resolve-Path $file).Path
+    $text = [System.IO.File]::ReadAllText($path, (New-Object System.Text.UTF8Encoding($false)))
+
     if ($text.Contains("https://github.com/OWNER/REPO")) {
         $text = $text.Replace("https://github.com/OWNER/REPO", $repoUrl)
-        # UTF-8 without BOM keeps the docs byte-identical to the source files
-        [System.IO.File]::WriteAllText((Resolve-Path $file).Path, $text, (New-Object System.Text.UTF8Encoding($false)))
+        # UTF-8 without BOM keeps the docs byte-identical to the rest of the sources
+        [System.IO.File]::WriteAllText($path, $text, (New-Object System.Text.UTF8Encoding($false)))
         Write-Ok "$file updated"
         $patched = $true
     }

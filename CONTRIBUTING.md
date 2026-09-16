@@ -2,16 +2,32 @@
 
 ## 版本规范
 
-版本号写在 `gradle.properties` 的 `version` 里，并**原样作为 Git Tag 使用**（Tag 名 == 版本号，例如 `1.0`）。
+版本号写在 `gradle.properties` 的 `version` 里，并**原样作为 Git Tag 使用**（Tag 名 == 版本号，例如 `1.1.0`）。
+
+采用三段式 `X.Y.Z`：
 
 | 版本 | 含义 | 例子 |
 | --- | --- | --- |
-| **X.0** | **大改动**：加入全新机制或新玩法 | 新增「烤橡果」「橡果派」、加入烹饪锅配方、新的生物群系互动 |
-| **X.Y** | **小改动**：仅修复兼容性或优化问题 | 适配 Minecraft 26.2、修复与某模组的冲突、性能优化 |
+| **X.Y.0** | **大改动**：加入全新机制或新玩法 | 新增「烤橡果」「橡果派」、加入烹饪锅配方、新的生物群系互动 |
+| **X.Y.Z** | **小改动**：仅修复兼容性或优化问题 | 放宽 Loader 版本要求、适配 Minecraft 26.2、修复模组冲突、性能优化 |
 
-* `X.0` 与 `X.Y` 都是「**可玩版本**」，都必须打 Tag。
+* 两者都是「**可玩版本**」，都必须打 Tag。
 * 开发过程中的中间提交**不打 Tag**。
 * Tag 一旦推送就不要移动或删除——它是回滚和对比的依据。
+* 小改动**不改变** `X.Y` 前缀：`1.1.0` 之后的小改动依次是 `1.1.1`、`1.1.2`；只有当出现新玩法时才升到 `1.2.0`。
+
+### Fabric Loader 兼容性约定
+
+`gradle.properties` 里有两个 Loader 相关字段，含义不同，别混淆：
+
+| 字段 | 作用 |
+| --- | --- |
+| `loader_version` | **开发环境**实际使用的 Loader。刻意固定在**支持的最低版本**（当前 `0.18.4`），这样一旦代码误用了新版 Loader 才有的行为，会在本地 GameTest 里直接暴露，而不是等玩家崩溃。 |
+| `min_loader_version` | 写进 `fabric.mod.json` 的 `depends.fabricloader`，即**玩家可用的最低 Loader**。 |
+
+**下限由 Fabric API 决定**，不能随便往下降：当前 Fabric API `0.145.1+26.1` 自声明 `fabricloader >=0.18.4`，
+而 26.1 可用的最老 Loader 也正是 `0.18.4`。升级 Fabric API 时记得重新核对这两个值，
+核对方法：读 `fabric-api-<版本>.jar` 内 `fabric.mod.json` 的 `depends.fabricloader`。
 
 ## 发布流程
 
@@ -26,9 +42,9 @@ git add -A
 git commit -m "Release 1.1: 适配 Minecraft 26.2"
 
 # 5. 打 Tag（Tag 名必须和 version 完全一致）并推送
-git tag 1.1
+git tag 1.1.1
 git push origin main
-git push origin 1.1
+git push origin 1.1.1
 # 或者一次性推送所有标签：
 # git push origin main --tags
 ```
@@ -41,7 +57,9 @@ git push origin 1.1
 - [ ] `./gradlew build` 成功，`build/libs/acorns-delight-<version>.jar` 存在
 - [ ] 若升级了 Minecraft 版本，`minecraft_version`、`fabric_api_version`、`jei_version` 三者同步更新
       （JEI 每个 Minecraft 版本一个 artifact，换 MC 版本必须换 JEI 版本）
-- [ ] Tag 名与 `version` 一致
+- [ ] 若升级了 Fabric API，重新核对 `min_loader_version`
+- [ ] Tag 名与 `version` 一致，且已推送（`git push origin <tag>`）
+- [ ] 在 GitHub 上建 Release 并**上传构建好的 jar**（不要只留一个 tag，玩家不会自己编译）
 
 ## 开发环境
 
@@ -50,7 +68,9 @@ git push origin 1.1
 | JDK | **25**（必须，26.1 要求） |
 | Gradle | 9.5.1（wrapper 自带，无需安装） |
 | Fabric Loom | 1.17.20 |
-| Fabric Loader | 0.19.5 |
+| Fabric Loader（开发用） | **0.18.4**（刻意用最低支持版本，见上文） |
+| Fabric Loader（玩家最低） | 0.18.4 |
+| Fabric Loader（当前稳定） | 0.19.5 |
 
 常用命令：
 

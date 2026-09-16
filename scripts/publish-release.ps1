@@ -158,41 +158,50 @@ Write-Ok "Repository: $owner/$repo"
 
 # ------------------------------------------------- 3. Build the release body
 
-Write-Step "Building the release notes from CHANGELOG.md"
+# Release notes live in release-notes/<version>.md and are written in ENGLISH.
+# Reason: GitHub renders them for an international audience, and a dedicated file per
+# version is far easier to keep tidy than slicing a section out of CHANGELOG.md.
+#
+# CHANGELOG.md (Chinese) remains the canonical in-repo history; it is only used as a
+# fallback when no release-notes file exists yet.
+Write-Step "Building the release notes for $Version"
 
 $body = ""
-if (Test-Path ".\CHANGELOG.md") {
-    $changelog = [System.IO.File]::ReadAllText((Resolve-Path ".\CHANGELOG.md").Path, (New-Object System.Text.UTF8Encoding($false)))
-    $lines = $changelog -split "`r?`n"
-    $collect = $false
-    $buffer = New-Object System.Collections.Generic.List[string]
-    foreach ($line in $lines) {
-        if ($line -match "^##\s+\[?$([regex]::Escape($Version))\]?") { $collect = $true; continue }
-        elseif ($collect -and $line -match "^##\s") { break }
-        if ($collect) { $buffer.Add($line) }
-    }
-    if ($buffer.Count -gt 0) {
-        $body = ($buffer -join "`n").Trim()
-        Write-Ok "Pulled $($buffer.Count) lines from the CHANGELOG"
-    }
-    else {
-        Write-Note "No '## [$Version]' section found in CHANGELOG.md; using a generic body."
+$notesPath = ".\release-notes\$Version.md"
+
+if (Test-Path $notesPath) {
+    $body = ([System.IO.File]::ReadAllText((Resolve-Path $notesPath).Path,
+        (New-Object System.Text.UTF8Encoding($false)))).Trim()
+    Write-Ok "Using release-notes\$Version.md ($($body.Length) chars)"
+}
+else {
+    Write-Note "release-notes\$Version.md not found; falling back to CHANGELOG.md."
+
+    if (Test-Path ".\CHANGELOG.md") {
+        $changelog = [System.IO.File]::ReadAllText((Resolve-Path ".\CHANGELOG.md").Path, (New-Object System.Text.UTF8Encoding($false)))
+        $lines = $changelog -split "`r?`n"
+        $collect = $false
+        $buffer = New-Object System.Collections.Generic.List[string]
+        foreach ($line in $lines) {
+            if ($line -match "^##\s+\[?$([regex]::Escape($Version))\]?") { $collect = $true; continue }
+            elseif ($collect -and $line -match "^##\s") { break }
+            if ($collect) { $buffer.Add($line) }
+        }
+        if ($buffer.Count -gt 0) {
+            $body = ($buffer -join "`n").Trim()
+            Write-Ok "Pulled $($buffer.Count) lines from the CHANGELOG"
+        }
     }
 }
+
 if (-not $body) { $body = "Acorn's Delight $Version" }
 
-# Install instructions appended to the changelog text.
-# The Chinese text is written as \uXXXX escapes and decoded with [regex]::Unescape,
-# because PowerShell 5.1 double-quoted strings do NOT expand \uXXXX, and keeping the
-# file pure ASCII means it parses identically no matter which encoding is assumed for it.
-$installNote = @"
-
----
-**\u5b89\u88c5**\uff1a\u9700\u8981 Minecraft 26.1 + Fabric Loader 0.18.4 \u6216\u66f4\u9ad8 + [Fabric API](https://modrinth.com/mod/fabric-api)\u3002
-\u628a\u672c\u9875\u9644\u5e26\u7684 jar \u653e\u8fdb ``.minecraft/mods`` \u5373\u53ef\u3002Farmer's Delight\u3001JEI\u3001REI \u5747\u4e3a\u53ef\u9009\u3002
-"@
-$installNote = [regex]::Unescape($installNote)
-$body += $installNote
+# Keep the notes ASCII-only so they survive every encoding path unharmed.
+$nonAscii = ([regex]::Matches($body, '[^\x00-\x7F]')).Count
+if ($nonAscii -gt 0) {
+    Write-Note "Release notes contain $nonAscii non-ASCII characters. They will be sent as UTF-8;"
+    Write-Note "prefer English (ASCII) notes in release-notes/<version>.md to avoid any doubt."
+}
 
 # ---------------------------------------------------- 4. Create the release
 
@@ -205,23 +214,33 @@ try {
 }
 catch { }
 
-$payload = @{
+# Serialise the payload to UTF-8 BYTES ourselves.
+#
+# This is the important part. Windows PowerShell 5.1's ConvertTo-Json escapes non-ASCII
+# characters as \uXXXX, and Invoke-RestMethod encodes a *string* body as ISO-8859-1, so
+# those \uXXXX sequences get flattened to '?' on GitHub. Passing raw UTF-8 bytes with an
+# explicit charset keeps every character intact.
+$jsonText = [ordered]@{
     tag_name   = $Version
     name       = $name
     body       = $body
     draft      = [bool]$Draft
     prerelease = $false
-} | ConvertTo-Json -Depth 5
+} | ConvertTo-Json -Depth 5 -Compress
+
+$payloadBytes = [System.Text.Encoding]::UTF8.GetBytes($jsonText)
 
 if ($existing) {
     Write-Note "Release already exists (id $($existing.id)); updating it."
     $release = Invoke-RestMethod -Uri "https://api.github.com/repos/$owner/$repo/releases/$($existing.id)" `
-        -Headers $headers -Method Patch -Body $payload -ContentType "application/json" -TimeoutSec 60
+        -Headers $headers -Method Patch -Body $payloadBytes `
+        -ContentType "application/json; charset=utf-8" -TimeoutSec 60
     Write-Ok "Release updated"
 }
 else {
     $release = Invoke-RestMethod -Uri "https://api.github.com/repos/$owner/$repo/releases" `
-        -Headers $headers -Method Post -Body $payload -ContentType "application/json" -TimeoutSec 60
+        -Headers $headers -Method Post -Body $payloadBytes `
+        -ContentType "application/json; charset=utf-8" -TimeoutSec 60
     Write-Ok "Release created"
 }
 $releaseUrl = $release.html_url

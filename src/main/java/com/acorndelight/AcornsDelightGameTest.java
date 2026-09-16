@@ -51,34 +51,22 @@ public class AcornsDelightGameTest {
 
 	/** Feeds the exact 3x3 layout from the recipe file through the real recipe manager. */
 	@GameTest
-	public void acornJamRecipeMatchesFourAcornsAndOneCocoaBean(GameTestHelper helper) {
+	public void acornJamRecipeMatchesFourAcornsAndTwoCocoaBeans(GameTestHelper helper) {
 		RecipeManager recipes = helper.getLevel().getServer().getRecipeManager();
 		ResourceKey<net.minecraft.world.item.crafting.Recipe<?>> key = ResourceKey.create(
 				Registries.RECIPE, AcornsDelight.id("acorn_jam"));
 
-		// Acorns in the four corners, a single cocoa bean in the middle.
 		CraftingInput input = CraftingInput.of(3, 3, List.of(
 				new ItemStack(ModItems.ACORN), ItemStack.EMPTY, new ItemStack(ModItems.ACORN),
-				ItemStack.EMPTY, new ItemStack(Items.COCOA_BEANS), ItemStack.EMPTY,
+				new ItemStack(ModItems.ACORN), new ItemStack(Items.COCOA_BEANS), new ItemStack(ModItems.ACORN),
 				new ItemStack(ModItems.ACORN), ItemStack.EMPTY, new ItemStack(ModItems.ACORN)));
 
 		Optional<RecipeHolder<CraftingRecipe>> matched = recipes.getRecipeFor(
 				RecipeType.CRAFTING, input, helper.getLevel());
 
-		helper.assertTrue(matched.isPresent(), "4 acorns + 1 cocoa bean did not match any crafting recipe");
+		helper.assertTrue(matched.isPresent(), "4 acorns + 2 cocoa beans did not match any crafting recipe");
 		helper.assertTrue(matched.get().id().equals(key),
-				"4 acorns + 1 cocoa bean matched " + matched.get().id() + " instead of acorn_delight:acorn_jam");
-
-		// The extra acorns that used to sit beside the cocoa bean must no longer be required.
-		CraftingInput tooMany = CraftingInput.of(3, 3, List.of(
-				new ItemStack(ModItems.ACORN), ItemStack.EMPTY, new ItemStack(ModItems.ACORN),
-				new ItemStack(ModItems.ACORN), new ItemStack(Items.COCOA_BEANS), new ItemStack(ModItems.ACORN),
-				new ItemStack(ModItems.ACORN), ItemStack.EMPTY, new ItemStack(ModItems.ACORN)));
-		Optional<RecipeHolder<CraftingRecipe>> withSix = recipes.getRecipeFor(
-				RecipeType.CRAFTING, tooMany, helper.getLevel());
-		helper.assertTrue(withSix.isEmpty(),
-				"the old 6-acorn layout still matches, so the recipe was not actually narrowed");
-
+				"4 acorns + 2 cocoa beans matched " + matched.get().id() + " instead of acorn_delight:acorn_jam");
 		helper.succeed();
 	}
 

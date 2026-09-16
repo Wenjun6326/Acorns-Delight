@@ -46,10 +46,21 @@
 param(
     [string]$Version,
     [string]$Token,
-    [switch]$Draft
+    [switch]$Draft,
+    # Mark the release as a pre-release. Use this for superseded builds that have a known
+    # problem, so GitHub keeps them out of the "Latest" slot and users are nudged elsewhere.
+    [switch]$Prerelease,
+    # Build and upload the jar from this directory instead of the current one. Useful for
+    # publishing an older tag without disturbing the working tree.
+    [string]$ProjectDir
 )
 
 $ErrorActionPreference = "Stop"
+
+if ($ProjectDir) {
+    if (-not (Test-Path $ProjectDir)) { throw "ProjectDir does not exist: $ProjectDir" }
+    Set-Location $ProjectDir
+}
 
 function Write-Step([string]$Text) {
     Write-Host ""
@@ -225,7 +236,7 @@ $jsonText = [ordered]@{
     name       = $name
     body       = $body
     draft      = [bool]$Draft
-    prerelease = $false
+    prerelease = [bool]$Prerelease
 } | ConvertTo-Json -Depth 5 -Compress
 
 $payloadBytes = [System.Text.Encoding]::UTF8.GetBytes($jsonText)

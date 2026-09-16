@@ -32,34 +32,63 @@
 ## 发布流程
 
 ```bash
-# 1. 改 gradle.properties 里的 version（例如 1.0 -> 1.1）
-# 2. 更新 CHANGELOG.md，写清这个版本改了什么
-# 3. 验证，必须全绿（否则不要发布）
+# 1. 改 gradle.properties 里的 version（例如 1.1.0 -> 1.1.1）
+# 2. 更新 CHANGELOG.md（仓库内的中文正式历史）
+# 3. 新建 release-notes/<version>.md（英文，GitHub Release 的正文）
+# 4. 验证，必须全绿（否则不要发布）
 ./gradlew runGameTest build
 
-# 4. 提交
+# 5. 提交
 git add -A
-git commit -m "Release 1.1: 适配 Minecraft 26.2"
+git commit -m "Release 1.1.1: 适配 Minecraft 26.2"
 
-# 5. 打 Tag（Tag 名必须和 version 完全一致）并推送
+# 6. 打 Tag（Tag 名必须和 version 完全一致）并推送
 git tag 1.1.1
 git push origin main
 git push origin 1.1.1
 # 或者一次性推送所有标签：
 # git push origin main --tags
+
+# 7. 发布 Release 并自动上传 jar（必须做，玩家不会自己编译）
+powershell -ExecutionPolicy Bypass -File .\scripts\publish-release.ps1
 ```
+
+> **约定：每发布一个版本，都要在 GitHub 上建对应的 Release，并附上构建好的 jar。**
+> 只推 tag 不算发布完成 —— 玩家在 Releases 页面拿不到可下载的文件。
+
+### Release 说明为什么用英文
+
+GitHub 的 Release 正文面向国际玩家，因此放在 `release-notes/<version>.md` 且用**英文**撰写；
+`CHANGELOG.md` 保留中文，作为仓库内的正式历史。`publish-release.ps1` 优先读取
+`release-notes/<version>.md`，找不到时才回退到从 `CHANGELOG.md` 截取对应小节。
 
 ### 发布前检查清单
 
 - [ ] `gradle.properties` 的 `version` 已更新
-- [ ] `CHANGELOG.md` 已更新
+- [ ] `CHANGELOG.md` 已更新（中文）
+- [ ] `release-notes/<version>.md` 已新建（英文）
 - [ ] `./gradlew runGameTest` 输出 `All 6 required tests passed :)`
 - [ ] `./gradlew build` 成功，`build/libs/acorns-delight-<version>.jar` 存在
 - [ ] 若升级了 Minecraft 版本，`minecraft_version`、`fabric_api_version`、`jei_version` 三者同步更新
       （JEI 每个 Minecraft 版本一个 artifact，换 MC 版本必须换 JEI 版本）
 - [ ] 若升级了 Fabric API，重新核对 `min_loader_version`
 - [ ] Tag 名与 `version` 一致，且已推送（`git push origin <tag>`）
-- [ ] 在 GitHub 上建 Release 并**上传构建好的 jar**（不要只留一个 tag，玩家不会自己编译）
+- [ ] 运行 `scripts/publish-release.ps1`，确认 GitHub 上出现了 Release **且带有 jar 附件**
+- [ ] 被取代且有已知问题的旧版本，用 `-Prerelease` 发布，避免它占据 "Latest" 并误导玩家
+
+### 编码注意事项（踩过的坑）
+
+Windows PowerShell 5.1 在中文系统上默认按 **GBK/936** 处理文本，已两次造成实际事故：
+
+1. **写文件**：`Get-Content -Raw` 读无 BOM 的 UTF-8 文件会得到乱码，写回就把文件**永久损坏**
+   （曾导致 README 在 GitHub 上显示为乱码）。→ 始终用
+   `[System.IO.File]::ReadAllText/WriteAllText(path, ..., UTF8Encoding($false))`。
+2. **发 HTTP 请求**：`ConvertTo-Json` 把非 ASCII 转成 `\uXXXX`，而 `Invoke-RestMethod`
+   用字符串 body 时按 ISO-8859-1 发送，`\u` 被压成 `?`
+   （曾导致 Release 说明里 563 个中文变成 229 个问号）。→ 显式
+   `[System.Text.Encoding]::UTF8.GetBytes($json)` + `charset=utf-8`。
+
+因此 `scripts/*.ps1` 一律保存为**纯 ASCII**，避免依赖读取编码。
 
 ## 开发环境
 

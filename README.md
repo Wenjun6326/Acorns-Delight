@@ -102,10 +102,12 @@ JEI / REI 均为**可选**依赖：未安装时对应的入口点不会被加载
 
 | 版本 | 说明 | 下载 |
 | --- | --- | --- |
-| **1.1.0** | 放宽 Fabric Loader 要求至 **0.18.4+**（玩法同 1.0） | [acorns-delight-1.1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/download/1.1.0/acorns-delight-1.1.0.jar) |
-| 1.0 | 首个可玩版本（要求 Loader 0.19.5+） | [tag 1.0](https://github.com/Wenjun6326/Acorns-Delight/tree/1.0) |
+| **1.1.0** ⭐ | 放宽 Fabric Loader 要求至 **0.18.4+**（玩法同 1.0） | [acorns-delight-1.1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/download/1.1.0/acorns-delight-1.1.0.jar) |
+| 1.0 | 首个可玩版本，**仅支持 Loader 0.19.5+** | [acorns-delight-1.0.jar](https://github.com/Wenjun6326/Acorns-Delight/releases/download/1.0/acorns-delight-1.0.jar) |
 
-> **建议用 1.1.0**：1.0 只写了 `fabricloader >=0.19.5`，在更老的 Loader 上会被直接拒绝加载。
+> ⚠️ **请用 1.1.0。** 1.0 的 `fabric.mod.json` 声明 `fabricloader >=0.19.5`，比实际需要严格得多，
+> 在 0.18.x 或 0.19.0–0.19.4 上会被**直接拒绝加载**。1.1.0 已修正为 `>=0.18.4`，玩法完全相同。
+> 1.0 在 GitHub 上已标记为 **Pre-release**，只是为存档保留，不推荐使用。
 
 ## 发布到 GitHub
 

@@ -87,6 +87,12 @@ JEI 和 REI 都是**可选**的，不装不会报错。
 * [下载最新版本](https://github.com/Wenjun6326/Acorns-Delight/releases/latest)
 * [参与开发 / 自行构建](CONTRIBUTING.md)
 
+### 分支说明
+
+* **`main`** —— 主要开发线，新物品与新玩法往这里加，对应 `1.2.0` 及以后。
+* **`release/1.1`** —— `1.1.x` 的稳定维护线，只接收修复与优化。
+  希望长期停留在 1.1 系列的玩家可以关注这条分支上的后续 `1.1.x` 版本。
+
 ## 许可
 
 MIT，详见 [LICENSE](LICENSE)。

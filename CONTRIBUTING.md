@@ -1,5 +1,25 @@
 # 参与开发 / Contributing
 
+## 分支策略
+
+| 分支 | 定位 | 往里提交什么 |
+| --- | --- | --- |
+| **`main`** | **主要开发线** | 新功能、新玩法。下一个大版本（如 `1.2.0`）的工作都在这里。 |
+| **`release/1.1`** | **稳定维护线** | 只放 `1.1.x` 的 bug 修复与优化，让 `1.1.1` 这条线持续变好；**不放新玩法**。 |
+
+`release/1.1` 是**发行线**，不是临时分支，不要删。它的意义是：`1.1.1` 是第一个自己开发的
+农夫乐事附属版本，作为一个纪念点冻结下来，之后的打磨（数值微调、贴图、兼容性修复）都
+提交到这条线上，用 `1.1.1` → `1.1.2` → `1.1.3` 的形式发布；而全新的内容推到更后面的版本，
+走 `main`。
+
+**提交到哪里？**
+
+* 修 bug、调数值、改贴图、适配新版本 → `release/1.1`，然后发 `1.1.x`
+* 加新物品、新机制、新配方 → `main`，然后发 `1.2.0` 及以后
+
+若某个修复对两边都必要（例如安全或崩溃问题），在 `release/1.1` 修完后用
+`git cherry-pick` 带到 `main`。
+
 ## 版本规范
 
 版本号写在 `gradle.properties` 的 `version` 里，并**原样作为 Git Tag 使用**（Tag 名 == 版本号，例如 `1.1.0`）。
@@ -31,27 +51,35 @@
 
 ## 发布流程
 
+先确认你要发的是哪条线，然后**在对应分支上**操作。
+
+### 修 bug / 优化 → 发布 `1.1.x`（在 `release/1.1` 上）
+
 ```bash
-# 1. 改 gradle.properties 里的 version（例如 1.1.0 -> 1.1.1）
+git switch release/1.1
+
+# 1. 改 gradle.properties 里的 version（1.1.1 -> 1.1.2）
 # 2. 更新 CHANGELOG.md（仓库内的中文正式历史）
 # 3. 新建 release-notes/<version>.md（英文，GitHub Release 的正文）
 # 4. 验证，必须全绿（否则不要发布）
 ./gradlew runGameTest build
 
-# 5. 提交
+# 5. 提交并推送
 git add -A
-git commit -m "Release 1.1.1: 适配 Minecraft 26.2"
+git commit -m "Release 1.1.2: 修正 xxx"
+git push origin release/1.1
 
 # 6. 打 Tag（Tag 名必须和 version 完全一致）并推送
-git tag 1.1.1
-git push origin main
-git push origin 1.1.1
-# 或者一次性推送所有标签：
-# git push origin main --tags
+git tag 1.1.2
+git push origin 1.1.2
 
 # 7. 发布 Release 并自动上传 jar（必须做，玩家不会自己编译）
 powershell -ExecutionPolicy Bypass -File .\scripts\publish-release.ps1
 ```
+
+### 新功能 → 发布 `1.2.0` 及以后（在 `main` 上）
+
+把上面第 5 步的 `release/1.1` 换成 `main` 即可，其余相同。
 
 > **约定：每发布一个版本，都要在 GitHub 上建对应的 Release，并附上构建好的 jar。**
 > 只推 tag 不算发布完成 —— 玩家在 Releases 页面拿不到可下载的文件。
@@ -65,6 +93,7 @@ GitHub 的 Release 正文面向国际玩家，因此放在 `release-notes/<versi
 ### 发布前检查清单
 
 - [ ] `gradle.properties` 的 `version` 已更新
+- [ ] **在正确的分支上**：`1.1.x` 在 `release/1.1`，新功能在 `main`（`git branch --show-current` 确认）
 - [ ] `CHANGELOG.md` 已更新（中文）
 - [ ] `release-notes/<version>.md` 已新建（英文）
 - [ ] `./gradlew runGameTest` 输出 `All 6 required tests passed :)`
